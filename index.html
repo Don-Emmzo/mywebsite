@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#171311">
+    <title>D_E's Eats | Catering &amp; Dining</title>
+    <style>
+        :root {
+            color-scheme: light;
+            --ink: #20251f;
+            --muted: #70756c;
+            --green: #315b43;
+            --green-dark: #244633;
+            --cream: #f7f5ef;
+            --paper: #fffefa;
+            --line: #e8e6dc;
+            --orange: #d7784b;
+            --shadow: 0 18px 50px rgba(41, 49, 37, .08);
+        }
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            margin: 0;
+            background: var(--cream);
+            color: var(--ink);
+            font-family: Inter, "Segoe UI", Arial, sans-serif;
+            line-height: 1.5;
+        }
+        button, input, select, textarea { font: inherit; }
+        button { cursor: pointer; }
+        a { color: inherit; }
+        .topbar {
+            height: 74px;
+            padding: 0 max(5vw, 22px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--paper);
+            border-bottom: 1px solid var(--line);
+        }
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            font-family: Georgia, serif;
+            font-size: 1.35rem;
+            font-weight: 700;
+            letter-spacing: -.04em;
+        }
+        .brand-mark {
+            display: grid;
+            width: 34px;
+            height: 34px;
+            place-items: center;
+            border-radius: 50%;
+            background: var(--green);
+            color: white;
+            font-family: Georgia, serif;
+            font-size: 1.1rem;
+        }
+        .topbar nav { display: flex; align-items: center; gap: 28px; }
+        .topbar nav a { color: #555c53; font-size: .92rem; text-decoration: none; }
+        .topbar nav a:hover { color: var(--green); }
+        .cart-link {
+            padding: 10px 16px;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            color: var(--green) !important;
+            font-weight: 700;
+        }
+        .hero {
+            position: relative;
+            min-height: 410px;
+            padding: 82px max(8vw, 24px);
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            background:
+                linear-gradient(90deg, rgba(21, 31, 23, .82), rgba(21, 31, 23, .48) 52%, rgba(21, 31, 23, .12)),
+                url("https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=2000&q=85") center 48% / cover;
+            color: #fff;
+        }
+        .hero-copy { max-width: 660px; }
+        .eyebrow {
+            margin: 0 0 13px;
+            color: #d8e6d8;
+            font-size: .76rem;
+            font-weight: 800;
+            letter-spacing: .17em;
+            text-transform: uppercase;
+        }
+        h1, h2, h3, p { margin-top: 0; }
+        .hero h1 {
+            max-width: 620px;
+            margin-bottom: 16px;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: clamp(2.8rem, 6vw, 5rem);
+            font-weight: 500;
+            letter-spacing: -.055em;
+            line-height: .99;
+        }
+        .hero-copy > p:last-of-type { max-width: 500px; margin-bottom: 25px; color: #f0f0e9; }
+        .primary-link, .submit-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 48px;
+            padding: 0 22px;
+            border: 0;
+            border-radius: 999px;
+            background: var(--green);
+            color: white;
+            font-weight: 750;
+            text-decoration: none;
+            transition: background .2s, transform .2s;
+        }
+        .primary-link { background: #f3e7d5; color: var(--ink); }
+        .primary-link:hover, .submit-button:hover { transform: translateY(-1px); background: var(--green-dark); color: white; }
+        .page-wrap { width: min(1240px, 90%); margin: 0 auto; }
+        .menu-section { padding: 68px 0 42px; }
+        .section-heading {
+            display: flex;
+            align-items: end;
+            justify-content: space-between;
+            gap: 24px;
+            margin-bottom: 28px;
+        }
+        .section-heading h2, .form-heading h2 {
+            margin-bottom: 7px;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 500;
+            letter-spacing: -.045em;
+        }
+        .section-heading p, .form-heading p { margin-bottom: 0; color: var(--muted); }
+        .menu-count {
+            flex: 0 0 auto;
+            padding: 8px 13px;
+            border: 1px solid #dedfd4;
+            border-radius: 999px;
+            color: var(--green);
+            font-size: .82rem;
+            font-weight: 750;
+        }
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 20px;
+        }
+        .dish-card {
+            min-width: 0;
+            overflow: hidden;
+            border: 1px solid var(--line);
+            border-radius: 15px;
+            background: var(--paper);
+            box-shadow: 0 5px 20px rgba(41, 49, 37, .035);
+            transition: transform .2s, box-shadow .2s;
+        }
+        .dish-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+        .dish-card img { display: block; width: 100%; height: 164px; object-fit: cover; background: #e8e6dc; }
+        .dish-info { padding: 16px; }
+        .dish-info h3 { min-height: 25px; margin-bottom: 4px; font-size: 1rem; }
+        .dish-description { min-height: 39px; margin-bottom: 13px; color: var(--muted); font-size: .82rem; }
+        .dish-bottom { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+        .dish-price { color: var(--green); font-weight: 800; white-space: nowrap; }
+        .dish-price small { display: block; color: var(--muted); font-size: .68rem; font-weight: 500; }
+        .add-button {
+            padding: 8px 13px;
+            border: 1px solid #cdd9ce;
+            border-radius: 999px;
+            background: transparent;
+            color: var(--green);
+            font-size: .8rem;
+            font-weight: 750;
+        }
+        .add-button:hover { background: var(--green); color: white; }
+        .order-section { padding: 34px 0 80px; }
+        .order-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1.15fr) minmax(300px, .85fr);
+            gap: 24px;
+            align-items: start;
+        }
+        .panel {
+            padding: 28px;
+            border: 1px solid var(--line);
+            border-radius: 17px;
+            background: var(--paper);
+            box-shadow: 0 6px 25px rgba(41, 49, 37, .04);
+        }
+        .form-heading { margin-bottom: 24px; }
+        .form-heading h2 { font-size: 2.25rem; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .field { display: flex; flex-direction: column; gap: 6px; }
+        .field.full { grid-column: 1 / -1; }
+        .field label { color: #40463e; font-size: .82rem; font-weight: 700; }
+        .field input, .field select, .field textarea {
+            width: 100%;
+            min-height: 45px;
+            padding: 10px 12px;
+            border: 1px solid #dedfd7;
+            border-radius: 8px;
+            outline: none;
+            background: white;
+            color: var(--ink);
+        }
+        .field textarea { min-height: 84px; resize: vertical; }
+        .field input:focus, .field select:focus, .field textarea:focus {
+            border-color: var(--green);
+            box-shadow: 0 0 0 3px rgba(49, 91, 67, .1);
+        }
+        .form-note { margin: 16px 0 0; color: var(--muted); font-size: .78rem; }
+        .submit-button { width: 100%; margin-top: 19px; }
+        .cart-panel { position: sticky; top: 20px; }
+        .cart-title { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+        .cart-title h2 { margin: 0; font-family: Georgia, serif; font-size: 1.8rem; font-weight: 500; }
+        .cart-title span { color: var(--muted); font-size: .82rem; }
+        .cart-empty { padding: 24px 0; color: var(--muted); text-align: center; }
+        .cart-list { display: grid; gap: 13px; }
+        .cart-row { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; padding-bottom: 13px; border-bottom: 1px solid var(--line); }
+        .cart-row-name { font-size: .9rem; font-weight: 700; }
+        .cart-row-price { color: var(--green); font-size: .88rem; font-weight: 750; }
+        .quantity-controls { display: inline-flex; align-items: center; gap: 9px; margin-top: 5px; }
+        .quantity-controls button {
+            width: 25px;
+            height: 25px;
+            border: 1px solid #d8ded6;
+            border-radius: 50%;
+            background: white;
+            color: var(--green);
+            font-weight: 800;
+            line-height: 1;
+        }
+        .quantity-controls button:hover { background: var(--green); color: white; }
+        .cart-totals { display: grid; gap: 9px; margin-top: 17px; }
+        .total-line { display: flex; justify-content: space-between; color: #60665d; font-size: .9rem; }
+        .total-line.grand { padding-top: 12px; border-top: 1px solid var(--line); color: var(--ink); font-size: 1.08rem; font-weight: 800; }
+        .delivery-caption { margin: 13px 0 0; color: var(--muted); font-size: .76rem; }
+        .notice {
+            position: fixed;
+            right: 22px;
+            bottom: 22px;
+            z-index: 5;
+            width: min(380px, calc(100% - 44px));
+            padding: 16px 18px;
+            border-radius: 12px;
+            background: var(--green-dark);
+            box-shadow: var(--shadow);
+            color: white;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(10px);
+            transition: opacity .2s, transform .2s;
+        }
+        .notice.visible { opacity: 1; transform: translateY(0); }
+        .notice strong { display: block; margin-bottom: 3px; }
+        footer { padding: 23px; border-top: 1px solid var(--line); color: var(--muted); text-align: center; font-size: .82rem; }
+        @media (max-width: 980px) {
+            .menu-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+            .order-layout { grid-template-columns: 1fr; }
+            .cart-panel { position: static; grid-row: 1; }
+        }
+        @media (max-width: 640px) {
+            .topbar { height: 64px; padding: 0 18px; }
+            .topbar nav { gap: 12px; }
+            .topbar nav a:not(.cart-link) { display: none; }
+            .hero { min-height: 390px; padding: 62px 24px; }
+            .page-wrap { width: min(100% - 32px, 520px); }
+            .menu-section { padding-top: 48px; }
+            .section-heading { align-items: start; flex-direction: column; gap: 12px; }
+            .menu-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+            .dish-card img { height: 130px; }
+            .dish-info { padding: 12px; }
+            .dish-info h3 { font-size: .92rem; }
+            .dish-description { font-size: .76rem; }
+            .dish-bottom { align-items: start; flex-direction: column; }
+            .panel { padding: 21px 17px; }
+            .form-grid { grid-template-columns: 1fr; }
+            .field.full { grid-column: auto; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+        }
+        :root {
+            color-scheme: dark;
+            --ink: #f4eee4;
+            --muted: #b5a99b;
+            --green: #a83d43;
+            --green-dark: #7f292f;
+            --cream: #171311;
+            --paper: #211b18;
+            --line: #3a2d28;
+            --orange: #d5ae6b;
+            --shadow: 0 20px 55px rgba(0, 0, 0, .34);
+        }
+        body {
+            background:
+                radial-gradient(ellipse at 50% 0, rgba(120, 45, 40, .12), transparent 43%),
+                var(--cream);
+            color: var(--ink);
+        }
+        .topbar {
+            background: rgba(23, 19, 17, .97);
+            border-bottom-color: #4b3428;
+        }
+        .brand { color: #f5ead8; letter-spacing: .015em; }
+        .brand-mark {
+            border: 1px solid #d5ae6b;
+            border-radius: 7px 7px 50% 50%;
+            background: linear-gradient(145deg, #8a2e35, #4a2021);
+            color: #f2d69e;
+            font-family: Georgia, serif;
+            font-size: .88rem;
+        }
+        .topbar nav a { color: #d0c2b2; }
+        .topbar nav a:hover { color: #e0bd79; }
+        .cart-link {
+            border-color: #80623e;
+            color: #e0bd79 !important;
+        }
+        .hero {
+            min-height: 475px;
+            background:
+                linear-gradient(90deg, rgba(17, 13, 12, .92), rgba(25, 15, 14, .69) 55%, rgba(22, 14, 12, .26)),
+                url("https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=2000&q=85") center 54% / cover;
+        }
+        .eyebrow { color: #dfc38d; }
+        .hero h1 {
+            color: #fff7e9;
+            font-size: clamp(3rem, 6vw, 5.2rem);
+        }
+        .hero-copy > p:last-of-type { color: #e4d7c8; }
+        .primary-link {
+            border: 1px solid #d7b66d;
+            background: #d7b66d;
+            color: #221814;
+        }
+        .primary-link:hover { background: #f0d69f; color: #221814; }
+        .menu-section { padding-top: 55px; }
+        .section-heading h2, .form-heading h2, .cart-title h2 {
+            color: #f6ecdc;
+            font-family: Georgia, "Times New Roman", serif;
+        }
+        .section-heading p, .form-heading p { color: var(--muted); }
+        .menu-count {
+            border-color: #80623e;
+            color: #e0bd79;
+        }
+        .dish-card {
+            border-color: #3b2e28;
+            background: linear-gradient(155deg, #261e1a, #1e1916);
+        }
+        .dish-card img { filter: saturate(.84) contrast(1.04); }
+        .dish-info h3 { color: #f4eadb; }
+        .dish-price, .cart-row-price { color: #e2bd76; }
+        .dish-price small, .dish-description, .cart-title span,
+        .cart-empty, .delivery-caption, .form-note { color: #b5a99b; }
+        .add-button {
+            border-color: #8d3b3e;
+            color: #e7c2a7;
+        }
+        .add-button:hover { background: #8e3038; color: #fff4e4; }
+        .panel {
+            border-color: #3b2e28;
+            background: linear-gradient(150deg, #261f1b, #1e1916);
+            box-shadow: 0 12px 38px rgba(0, 0, 0, .2);
+        }
+        .field label { color: #e0d3c3; }
+        .field input, .field select, .field textarea {
+            border-color: #514037;
+            background: #171311;
+            color: #f4eee4;
+            color-scheme: dark;
+        }
+        .field input:focus, .field select:focus, .field textarea:focus {
+            border-color: #d5ae6b;
+            box-shadow: 0 0 0 3px rgba(213, 174, 107, .13);
+        }
+        .quantity-controls button {
+            border-color: #65483b;
+            background: #211b18;
+            color: #e0bd79;
+        }
+        .quantity-controls button:hover { background: #8e3038; color: #fff4e4; }
+        .total-line { color: #c4b7a8; }
+        .total-line.grand { border-color: #4b3830; color: #f4eee4; }
+        .notice { background: #69272d; color: #fff5e8; }
+        .house-profile {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            gap: 32px;
+            padding: 28px 34px;
+            border: 1px solid #654a32;
+            border-top: 2px solid #d1a95e;
+            border-radius: 3px 3px 12px 12px;
+            background:
+                linear-gradient(110deg, rgba(99, 35, 37, .45), transparent 56%),
+                #211a17;
+            box-shadow: var(--shadow);
+        }
+        .house-profile .eyebrow { margin-bottom: 5px; color: #dbb86d; }
+        .house-profile h2 {
+            margin: 0;
+            color: #f3e5ca;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 1.6rem;
+            font-weight: 500;
+        }
+        .house-profile p { margin: 0; color: #c7b8a7; font-size: .91rem; }
+        .crest-lockup, .brand-crest { position: relative; display: block; flex: 0 0 auto; aspect-ratio: 11 / 13; }
+        .crest-lockup { width: 246px; filter: drop-shadow(0 8px 12px rgba(0, 0, 0, .45)); }
+        .brand-crest { width: 47px; }
+        .house-crest, .brand-mark { display: block; width: 100%; height: 100%; }
+        .lion-portrait {
+            position: absolute;
+            top: 14.62%;
+            left: 22%;
+            width: 56.36%;
+            aspect-ratio: 1;
+            border: 1px solid #e5c16d;
+            border-radius: 50%;
+            object-fit: cover;
+            object-position: center;
+            filter: sepia(.2) saturate(.82) contrast(1.08);
+        }
+        .menu-cart-link { display: inline-flex; margin-top: 24px; }
+        footer { border-color: #3b2e28; color: #aa9a89; }
+        @media (max-width: 640px) {
+            .house-profile { grid-template-columns: 1fr; justify-items: center; gap: 14px; padding: 24px 20px; text-align: center; }
+            .house-profile > div { grid-row: 1; }
+            .crest-lockup { grid-row: 2; width: 216px; }
+            .house-profile > p { grid-row: 3; }
+        }
+    </style>
+</head>
+<body>
+    <header class="topbar">
+        <a class="brand" href="#" aria-label="D_E's Eats home">
+            <span class="brand-crest" aria-hidden="true">
+                <img class="brand-mark" src="D_E Eats Crest.svg" alt="">
+                <img class="lion-portrait" src="de-eats-lion.jpg?v=2" alt="">
+            </span>
+            D_E's Eats
+        </a>
+        <nav aria-label="Main navigation">
+            <a href="#the-house">Our house</a>
+            <a href="#menu">Our menu</a>
+            <a class="cart-link" href="D_E Eats Order.html">Order &amp; delivery <span id="nav-count">(0)</span></a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-copy">
+                <p class="eyebrow">The family table · Est. with love</p>
+                <h1>An offer your taste buds can't refuse.</h1>
+                <p>Come for the candlelit dining. Stay for the generous platters, bold flavors, and a seat saved just for you.</p>
+                <a class="primary-link" href="#menu">Discover the menu</a>
+            </div>
+        </section>
+
+        <section class="page-wrap" id="the-house" aria-label="About D_E's Eats">
+            <div class="house-profile">
+                <div>
+                    <p class="eyebrow">The house of D_E</p>
+                    <h2>Good food. Great company.</h2>
+                </div>
+                <div class="crest-lockup" role="img" aria-label="Realistic lion portrait centered in a black-and-gold shield with a D_E Eats ribbon">
+                    <img class="house-crest" src="D_E Eats Crest.svg" alt="">
+                    <img class="lion-portrait" src="de-eats-lion.jpg?v=2" alt="">
+                </div>
+                <p>Rooted in the warmth of the family table, D_E's Eats brings a little old-school glamour to every gathering. Pull up a chair; the best evenings are shared.</p>
+            </div>
+        </section>
+
+        <section class="menu-section page-wrap" id="menu">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow" style="color: var(--orange);">Made for the inner circle</p>
+                    <h2>Our table, your favorites.</h2>
+                    <p>Choose your favorites and add them to your order. Prices are in Nigerian naira, per platter or serving as noted.</p>
+                </div>
+                <span class="menu-count">50 fresh favorites</span>
+            </div>
+            <div class="menu-grid" id="menu-grid" aria-live="polite"></div>
+            <a class="primary-link menu-cart-link" href="D_E Eats Order.html">Review order &amp; delivery details <span id="menu-cart-count"></span></a>
+        </section>
+
+    </main>
+
+    <footer>D_E's Eats · Good food. Great company. Always.</footer>
+    <div class="notice" id="notice" role="status" aria-live="polite"></div>
+
+    <script>
+        const dishes = [
+            { id: "charcuterie", name: "Harvest Charcuterie Board", description: "Artisan cheeses, cured meats, fruit &amp; crackers", price: 68000, unit: "board · serves 8", image: "photo-1547592180-85f173990554" },
+            { id: "bruschetta", name: "Tomato Basil Bruschetta", description: "Toasted crostini, ripe tomato &amp; fresh basil", price: 38000, unit: "platter · 24 pieces", image: "photo-1572695157366-5e585ab2b69f" },
+            { id: "caprese", name: "Caprese Skewers", description: "Mozzarella, sweet tomato &amp; basil pesto", price: 42000, unit: "platter · 24 pieces", image: "photo-1490645935967-10de6ba17061" },
+            { id: "hummus", name: "Garden Hummus Platter", description: "Whipped hummus, crisp vegetables &amp; pita", price: 36000, unit: "platter · serves 8", image: "photo-1577906096429-f73c2c312435" },
+            { id: "shrimp", name: "Citrus Shrimp Cocktail", description: "Chilled shrimp with zesty house cocktail sauce", price: 72000, unit: "platter · 24 pieces", image: "photo-1565680018434-b513d5e5fd47" },
+            { id: "spring-rolls", name: "Fresh Vegetable Rolls", description: "Rainbow vegetables with ginger dipping sauce", price: 40000, unit: "platter · 20 pieces", image: "photo-1547592180-85f173990554" },
+            { id: "wings", name: "Sticky BBQ Chicken Wings", description: "Slow-roasted wings with smoky barbecue glaze", price: 58000, unit: "platter · 24 pieces", image: "photo-1527477396000-e27163b481c2" },
+            { id: "meatballs", name: "Herbed Beef Meatballs", description: "Tender bites in a rich tomato herb sauce", price: 54000, unit: "platter · 24 pieces", image: "photo-1529042410759-befb1204b468" },
+            { id: "sliders", name: "Mini Brioche Sliders", description: "Juicy beef, sharp cheddar &amp; pickled onion", price: 66000, unit: "platter · 12 sliders", image: "photo-1568901346375-23c9450c58cd" },
+            { id: "salmon", name: "Maple Glazed Salmon", description: "Oven-roasted salmon with a bright citrus finish", price: 84000, unit: "platter · serves 8", image: "photo-1467003909585-2f8a72700288" },
+            { id: "chicken", name: "Rosemary Roast Chicken", description: "Juicy carved chicken with lemon &amp; rosemary", price: 76000, unit: "platter · serves 8", image: "photo-1532550907401-a500c9a57435" },
+            { id: "lasagna", name: "Garden Vegetable Lasagna", description: "Roasted vegetables, ricotta &amp; slow-simmered sauce", price: 62000, unit: "tray · serves 8", image: "photo-1574894709920-11b28e7367e3" },
+            { id: "pasta", name: "Creamy Tuscan Pasta", description: "Sun-dried tomato, spinach &amp; parmesan cream", price: 56000, unit: "tray · serves 8", image: "photo-1473093295043-cdd812d0e601" },
+            { id: "mac", name: "Baked Mac &amp; Cheese", description: "Three-cheese sauce with a golden crumb top", price: 48000, unit: "tray · serves 8", image: "photo-1543339494-b4cd4f7ba686" },
+            { id: "rice", name: "Saffron Rice Pilaf", description: "Fragrant basmati rice, toasted almonds &amp; herbs", price: 38000, unit: "tray · serves 8", image: "photo-1516684732162-798a0062be99" },
+            { id: "salad", name: "Mediterranean Grain Salad", description: "Pearl couscous, cucumber, herbs &amp; lemon", price: 44000, unit: "bowl · serves 8", image: "photo-1512621776951-a57141f2eefd" },
+            { id: "caesar", name: "Classic Caesar Salad", description: "Crisp romaine, parmesan &amp; house dressing", price: 42000, unit: "bowl · serves 8", image: "photo-1546793665-c74683f339c1" },
+            { id: "tacos", name: "Street-Style Chicken Tacos", description: "Seasoned chicken, salsa verde &amp; fresh slaw", price: 64000, unit: "platter · 12 tacos", image: "photo-1551504734-5ee1c4a1479b" },
+            { id: "falafel", name: "Golden Falafel Bites", description: "Crisp chickpea fritters with tahini dip", price: 46000, unit: "platter · 24 pieces", image: "photo-1512621776951-a57141f2eefd" },
+            { id: "flatbread", name: "Roasted Veggie Flatbread", description: "Seasonal vegetables, whipped feta &amp; herbs", price: 46000, unit: "platter · 12 slices", image: "photo-1579751626657-72bc17010498" },
+            { id: "fruit", name: "Seasonal Fruit Platter", description: "A colorful selection of fresh-cut seasonal fruit", price: 40000, unit: "platter · serves 8", image: "photo-1490474418585-ba9bad8fd0ea" },
+            { id: "brownies", name: "Fudge Brownie Bites", description: "Rich chocolate brownies with a crackly top", price: 34000, unit: "box · 24 pieces", image: "photo-1606313564200-e75d5e30476c" },
+            { id: "cheesecake", name: "Mini Berry Cheesecakes", description: "Creamy vanilla cheesecake with berry compote", price: 52000, unit: "box · 12 pieces", image: "photo-1524351199678-941a58a3df50" },
+            { id: "cookies", name: "Cookie &amp; Dessert Bites", description: "A sweet mix of cookies and petite treats", price: 36000, unit: "box · 24 pieces", image: "photo-1499636136210-6f4ee915583e" },
+            { id: "lemon-bars", name: "Lemon Tart Squares", description: "Buttery shortbread with bright lemon curd", price: 38000, unit: "box · 16 pieces", image: "photo-1519915028121-7d3463d20b13" },
+            { id: "jollof", name: "Smoky Party Jollof Rice", description: "Tomato-pepper rice with that unmistakable party smoke", price: 52000, unit: "tray · serves 8", image: "photo-1516684732162-798a0062be99" },
+            { id: "fried-rice", name: "Nigerian Fried Rice", description: "Colorful vegetables, savory seasoning &amp; golden rice", price: 54000, unit: "tray · serves 8", image: "photo-1516684732162-798a0062be99" },
+            { id: "ofada", name: "Ofada Rice & Ayamase", description: "Local rice with bold green pepper sauce", price: 62000, unit: "platter · serves 8", image: "photo-1516684732162-798a0062be99" },
+            { id: "egusi", name: "Egusi Soup & Pounded Yam", description: "Melon seed soup with greens and smooth yam", price: 78000, unit: "set · serves 8", image: "photo-1547592180-85f173990554" },
+            { id: "efo-riro", name: "Efo Riro & Swallow", description: "Rich spinach stew with peppers and assorted meats", price: 74000, unit: "set · serves 8", image: "photo-1547592180-85f173990554" },
+            { id: "ogbono", name: "Ogbono Soup & Swallow", description: "Silky draw soup with leafy greens and smoked fish", price: 72000, unit: "set · serves 8", image: "photo-1547592180-85f173990554" },
+            { id: "okra", name: "Seafood Okra Soup", description: "Fresh okra with prawns, fish and a gentle pepper kick", price: 82000, unit: "pot · serves 8", image: "photo-1565680018434-b513d5e5fd47" },
+            { id: "suya", name: "Beef Suya Skewers", description: "Char-grilled beef with yaji spice and onion", price: 68000, unit: "platter · 20 skewers", image: "photo-1529042410759-befb1204b468" },
+            { id: "asaro", name: "Yam Porridge (Asaro)", description: "Slow-cooked yam with palm oil, greens and peppers", price: 48000, unit: "pot · serves 8", image: "photo-1547592180-85f173990554" },
+            { id: "moi-moi", name: "Steamed Moi Moi", description: "Savory steamed bean pudding with a soft, rich center", price: 36000, unit: "tray · 12 portions", image: "photo-1547592180-85f173990554" },
+            { id: "akara", name: "Fresh Akara Bites", description: "Crisp bean fritters, made fresh for your gathering", price: 32000, unit: "platter · 24 pieces", image: "photo-1529042410759-befb1204b468" },
+            { id: "pepper-soup", name: "Goat Meat Pepper Soup", description: "Fragrant, warming broth with tender goat meat", price: 68000, unit: "pot · serves 8", image: "photo-1547592180-85f173990554" },
+            { id: "asun", name: "Peppered Asun", description: "Smoky grilled goat tossed with hot peppers and onions", price: 76000, unit: "platter · serves 8", image: "photo-1527477396000-e27163b481c2" },
+            { id: "dodo", name: "Golden Dodo", description: "Sweet ripe plantain, caramelized at the edges", price: 28000, unit: "platter · serves 8", image: "photo-1490474418585-ba9bad8fd0ea" },
+            { id: "suya-chicken", name: "Chicken Suya", description: "Charred chicken strips with warm suya spice", price: 62000, unit: "platter · serves 8", image: "photo-1532550907401-a500c9a57435" },
+            { id: "beef-stew", name: "Nigerian Beef Stew", description: "Slow-braised beef in a deeply seasoned tomato stew", price: 66000, unit: "pot · serves 8", image: "photo-1529042410759-befb1204b468" },
+            { id: "beans", name: "Beans & Dodo", description: "Comforting honey beans with a side of sweet plantain", price: 46000, unit: "tray · serves 8", image: "photo-1490474418585-ba9bad8fd0ea" },
+            { id: "ewa-agoyin", name: "Ewa Agoyin & Pepper Sauce", description: "Soft mashed beans with a rich, slow-cooked pepper sauce", price: 44000, unit: "tray · serves 8", image: "photo-1547592180-85f173990554" },
+            { id: "coconut-rice", name: "Coconut Rice", description: "Aromatic rice simmered in creamy coconut milk", price: 56000, unit: "tray · serves 8", image: "photo-1516684732162-798a0062be99" },
+            { id: "catfish", name: "Grilled Catfish", description: "Whole fish with house pepper glaze and fresh herbs", price: 88000, unit: "platter · serves 6", image: "photo-1519708227418-c8fd9a32b7a2" },
+            { id: "chin-chin", name: "Classic Chin Chin", description: "Crunchy bite-size Nigerian party favorite", price: 24000, unit: "bowl · serves 10", image: "photo-1499636136210-6f4ee915583e" },
+            { id: "puff-puff", name: "Party Puff-Puff", description: "Soft, golden dough bites dusted with a little sugar", price: 26000, unit: "platter · 30 pieces", image: "photo-1499636136210-6f4ee915583e" },
+            { id: "meat-pies", name: "Mini Nigerian Meat Pies", description: "Flaky pastry filled with seasoned beef and vegetables", price: 42000, unit: "box · 12 pies", image: "photo-1572695157366-5e585ab2b69f" },
+            { id: "peppered-turkey", name: "Peppered Turkey", description: "Oven-roasted turkey tossed in house pepper sauce", price: 82000, unit: "platter · serves 8", image: "photo-1532550907401-a500c9a57435" },
+            { id: "nkwobi", name: "Nkwobi", description: "Tender cow foot in a rich, spiced palm-oil sauce", price: 68000, unit: "pot · serves 6", image: "photo-1529042410759-befb1204b468" }
+        ];
+
+        const cartStorageKey = "dEatsCart";
+        const menuGrid = document.getElementById("menu-grid");
+        const notice = document.getElementById("notice");
+        let noticeTimeout;
+        let cart;
+
+        function showNotice(title, message) {
+            notice.innerHTML = `<strong>${title}</strong>${message}`;
+            notice.classList.add("visible");
+            clearTimeout(noticeTimeout);
+            noticeTimeout = setTimeout(() => notice.classList.remove("visible"), 5200);
+        }
+
+        function formatMoney(amount) {
+            return new Intl.NumberFormat("en-NG", {
+                style: "currency",
+                currency: "NGN",
+                maximumFractionDigits: 0
+            }).format(amount);
+        }
+
+        function imageUrl(photoId) {
+            return `https://images.unsplash.com/${photoId}?auto=format&fit=crop&w=700&q=85`;
+        }
+
+        function persistCart(nextCart) {
+            const serialized = [...nextCart.entries()].map(([id, quantity]) => {
+                const dish = dishes.find(item => item.id === id);
+                return { id, name: dish.name.replaceAll("&amp;", "&"), price: dish.price, unit: dish.unit, quantity };
+            });
+            localStorage.setItem(cartStorageKey, JSON.stringify(serialized));
+        }
+
+        function updateCartCount() {
+            let savedCart = [];
+            try {
+                const stored = localStorage.getItem(cartStorageKey);
+                if (stored !== null) {
+                    savedCart = JSON.parse(stored);
+                    if (!Array.isArray(savedCart)) throw new Error("Saved cart data is not a list.");
+                }
+            } catch (error) {
+                console.error("Could not read the saved D_E Eats cart.", error);
+                showNotice("Cart unavailable", "Browser storage could not be read. Please check storage settings and reload.");
+            }
+            const count = savedCart.filter(item => item && Number.isInteger(item.quantity) && item.quantity > 0)
+                .reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById("nav-count").textContent = `(${count})`;
+            document.getElementById("menu-cart-count").textContent = count ? `(${count})` : "";
+        }
+
+        function renderMenu() {
+            menuGrid.innerHTML = dishes.map(dish => `
+                <article class="dish-card">
+                    <img src="${imageUrl(dish.image)}" alt="${dish.name.replaceAll("&amp;", "&")}" loading="lazy">
+                    <div class="dish-info">
+                        <h3>${dish.name}</h3>
+                        <p class="dish-description">${dish.description}</p>
+                        <div class="dish-bottom">
+                            <span class="dish-price">${formatMoney(dish.price)}<small>${dish.unit}</small></span>
+                            <button class="add-button" type="button" data-add="${dish.id}" aria-label="Add ${dish.name.replaceAll("&amp;", "&")} to order">Add +</button>
+                        </div>
+                    </div>
+                </article>
+            `).join("");
+        }
+
+        menuGrid.addEventListener("click", event => {
+            const button = event.target.closest("[data-add]");
+            if (!button) return;
+            const id = button.dataset.add;
+            const nextCart = new Map(cart);
+            nextCart.set(id, (nextCart.get(id) || 0) + 1);
+            try {
+                persistCart(nextCart);
+                cart = nextCart;
+                updateCartCount();
+                showNotice("Added to your order", dishes.find(dish => dish.id === id).name);
+            } catch (error) {
+                console.error("Could not save the D_E Eats cart.", error);
+                showNotice("Cart could not be saved", "Please check browser storage is available and try again.");
+            }
+        });
+
+        try {
+            const storedCart = localStorage.getItem(cartStorageKey);
+            const savedItems = storedCart ? JSON.parse(storedCart) : [];
+            if (!Array.isArray(savedItems)) throw new Error("Saved cart data is not a list.");
+            cart = new Map(savedItems.filter(item => dishes.some(dish => dish.id === item.id) && Number.isInteger(item.quantity) && item.quantity > 0).map(item => [item.id, item.quantity]));
+        } catch (error) {
+            console.error("Could not restore the D_E Eats cart.", error);
+            cart = new Map();
+            showNotice("Cart could not be restored", "Please check browser storage settings. Your menu is still available.");
+        }
+
+        document.querySelector(".menu-count").textContent = `${dishes.length} fresh favorites`;
+        renderMenu();
+        updateCartCount();
+    </script>
+</body>
+</html>
