@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 260" role="img" aria-labelledby="title description">
+    <title id="title">D_E Eats lion crest</title>
+    <desc id="description">A realistic lion portrait centered in a black and gold shield, with D_E Eats clearly written across a gold ribbon.</desc>
+    <defs>
+        <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#f7e6ac"/>
+            <stop offset=".48" stop-color="#c79843"/>
+            <stop offset="1" stop-color="#f2d78e"/>
+        </linearGradient>
+        <linearGradient id="black" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#211b17"/>
+            <stop offset="1" stop-color="#080706"/>
+        </linearGradient>
+    </defs>
+
+    <path d="M110 5 207 34v92c0 58-40 102-97 130-57-28-97-72-97-130V34z" fill="url(#gold)"/>
+    <path d="M110 13 199 40v85c0 52-35 91-89 118-54-27-89-66-89-118V40z" fill="url(#black)" stroke="#090807" stroke-width="3"/>
+    <path d="M110 25 186 48v76c0 43-29 75-76 100-47-25-76-57-76-100V48z" fill="none" stroke="url(#gold)" stroke-width="2"/>
+
+    <circle cx="110" cy="101" r="69" fill="#090807" stroke="url(#gold)" stroke-width="3"/>
+    <circle cx="110" cy="101" r="64.5" fill="#17110c" stroke="#8c682f" stroke-width="1"/>
+    <path d="m9 166 33-10 18 19-18 8 20 9-25 10-24-16 15-12zm202 0-33-10-18 19 18 8-20 9 25 10 24-16-15-12z" fill="#090807" stroke="url(#gold)" stroke-width="2"/>
+    <path d="m8 158 35-9 19 21 48 13 48-13 19-21 35 9-15 18 18 12-37 13-12 20H54l-12-20-37-13 18-12z" fill="url(#gold)" stroke="#120d08" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M48 169h124M54 209h112" stroke="#6d4b1e" stroke-width="1.5"/>
+    <text x="110" y="198" fill="#17110b" font-family="Georgia, 'Times New Roman', serif" font-size="23" font-weight="700" text-anchor="middle" textLength="142" lengthAdjust="spacingAndGlyphs">D_E Eats</text>
+
+    <path d="m110 224 4 5-4 5-4-5z" fill="url(#gold)"/>
+</svg>
